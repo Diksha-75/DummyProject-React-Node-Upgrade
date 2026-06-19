@@ -1,22 +1,13 @@
-import {
-  useEffect,
-  useState
-} from "react";
+import { useEffect, useState } from "react";
 
 function Weather() {
-  const [weather, setWeather] =
-    useState(null);
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=18.52&longitude=73.85&current_weather=true"
-    )
+    fetch("http://localhost:5000/api/weather")
       .then((res) => res.json())
-      .then((data) =>
-        setWeather(
-          data.current_weather
-        )
-      );
+      .then((data) => setWeather(data.current_weather))
+      .catch(() => setWeather(null));
   }, []);
 
   return (
@@ -25,16 +16,8 @@ function Weather() {
 
       {weather && (
         <>
-          <p>
-            Temperature:
-            {weather.temperature}
-            °C
-          </p>
-
-          <p>
-            Wind Speed:
-            {weather.windspeed}
-          </p>
+          <p>Temperature: {weather.temperature}°C</p>
+          <p>Wind Speed: {weather.windspeed}</p>
         </>
       )}
     </div>
