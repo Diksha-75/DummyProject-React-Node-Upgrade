@@ -12,7 +12,7 @@ function Profile() {
   };
 
   return (
-    <div>
+    <div className="profile-box">
       <h2>Profile</h2>
 
       <p>

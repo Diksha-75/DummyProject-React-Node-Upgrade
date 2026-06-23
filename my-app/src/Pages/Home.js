@@ -4,8 +4,9 @@ function Home() {
       <h2>Home</h2>
 
       <p>
-        Browser:
-        {navigator.userAgent}
+        WELCOME!
+        {/* Browser:
+        {navigator.userAgent} */}
       </p>
     </div>
   );

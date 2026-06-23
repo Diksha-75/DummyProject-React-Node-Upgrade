@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../App.css";
 
 function Weather() {
   const [weather, setWeather] = useState(null);
@@ -11,7 +12,7 @@ function Weather() {
   }, []);
 
   return (
-    <div>
+    <div className="weather-box">
       <h2>Weather</h2>
 
       {weather && (
