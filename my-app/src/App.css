@@ -128,3 +128,20 @@ select {
   border: 1px solid #ccc;
   margin-bottom: 10px;
 }
+
+
+.scroll-box {
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.scroll-box.light {
+  background-color: white;
+  color: black;
+}
+
+.scroll-box.dark {
+  background-color: #222;
+  color: white;
+}
