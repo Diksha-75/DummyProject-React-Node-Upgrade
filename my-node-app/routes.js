@@ -1,5 +1,6 @@
 const https = require("https");
 const axios = require("axios");
+const url = require("url");
 
 
 function getBody(req) {
@@ -40,225 +41,6 @@ module.exports = {
     }
   },
 
-  // ================= COUNTRIES =================
-
-
-// countries: (req, res, parsedUrl) => {
-//     const parts = parsedUrl.pathname.split("/");
-//     const region = parts[3];
-//     console.log("COUNTRIES API CALLED");
-//     console.log("Region:", region);
-
-
-//     https.get(
-//       `https://restcountries.com/v3.1/region/${region}`,
-//       (apiRes) => {
-//         let data = "";
-
-//         apiRes.on("data", (chunk) => (data += chunk));
-
-//         apiRes.on("end", () => {
-//           try {
-//             const json = JSON.parse(data);
-
-//             // ALWAYS RETURN ARRAY
-//             if (!Array.isArray(json)) {
-//               res.writeHead(200, { "Content-Type": "application/json" });
-//               return res.end(JSON.stringify([]));
-//             }
-//             const filtered = data.filter(
-//               (c) => c.region?.toLowerCase() === region
-//             );
-      
-//             res.writeHead(200, { "Content-Type": "application/json" });
-//             res.end(JSON.stringify(json));
-//           } catch {
-//             res.writeHead(200, { "Content-Type": "application/json" });
-//             res.end(JSON.stringify([]));
-//           }
-//         });
-//       }
-//     ).on("error", () => {
-//       res.writeHead(200, { "Content-Type": "application/json" });
-//       res.end(JSON.stringify([]));
-//     });
-//   },
-
-// countries: (req, res, parsedUrl) => {
-//   const parts = parsedUrl.pathname.split("/");
-//   const region = parts[3];
-
-//   console.log("COUNTRIES API CALLED");
-//   console.log("Region:", region);
-
-//   https.get(
-//     `https://restcountries.com/v3.1/region/${region}`,
-//     (apiRes) => {
-//       let data = "";
-
-//       apiRes.on("data", (chunk) => (data += chunk));
-
-//       apiRes.on("end", () => {
-//         try {
-//           const json = JSON.parse(data);
-
-//           if (!Array.isArray(json)) {
-//             res.writeHead(200, { "Content-Type": "application/json" });
-//             return res.end(JSON.stringify([]));
-//           }
-
-//           const filtered = json.filter(
-//             (c) => c.region?.toLowerCase() === region.toLowerCase()
-//           );
-
-//           res.writeHead(200, { "Content-Type": "application/json" });
-//           res.end(JSON.stringify(filtered));
-
-//         } catch (err) {
-//           res.writeHead(200, { "Content-Type": "application/json" });
-//           res.end(JSON.stringify([]));
-//         }
-//       });
-//     }
-//   ).on("error", () => {
-//     res.writeHead(200, { "Content-Type": "application/json" });
-//     res.end(JSON.stringify([]));
-//   });
-// },
-
-
-
-
-countries: (req, res, parsedUrl) => {
-  const parts = parsedUrl.pathname.split("/");
-  const region = parts[3];
-
-  https.get(
-    `https://restcountries.com/v3.1/region/${region}`,
-    (apiRes) => {
-      let data = "";
-
-      apiRes.on("data", (chunk) => (data += chunk));
-
-      apiRes.on("end", () => {
-        try {
-          const json = JSON.parse(data);
-
-          if (!Array.isArray(json)) {
-            return res.end(JSON.stringify([]));
-          }
-
-          // 🔥 IMPORTANT: transform data properly
-          const result = json.map((c) => ({
-            name: c.name?.common,
-            population: c.population,
-            region: c.region,
-            code: c.cca3
-          }));
-
-          res.writeHead(200, {
-            "Content-Type": "application/json"
-          });
-
-          res.end(JSON.stringify(result));
-
-        } catch (err) {
-          res.end(JSON.stringify([]));
-        }
-      });
-    }
-  ).on("error", () => {
-    res.end(JSON.stringify([]));
-  });
-},
-
-countries: (req, res, parsedUrl) => {
-  console.log("\n==============================");
-  console.log("🚀 COUNTRIES API HIT");
-
-  // 1️⃣ Check full path
-  console.log("📍 PATH:", parsedUrl.pathname);
-
-  const parts = parsedUrl.pathname.split("/");
-  console.log("📦 PATH PARTS:", parts);
-
-  // 2️⃣ Extract region safely
-  const region = parts[3] || "asia";
-  console.log("🌍 REGION:", region);
-
-  // 3️⃣ API URL
-  const url = `https://restcountries.com/v3.1/region/${region}`;
-  console.log("📡 CALLING:", url);
-
-  https
-    .get(url, (apiRes) => {
-      let data = "";
-
-      console.log("⏳ Waiting for API response...");
-
-      apiRes.on("data", (chunk) => {
-        data += chunk;
-      });
-
-      apiRes.on("end", () => {
-        console.log("📥 RAW DATA RECEIVED");
-
-        try {
-          const json = JSON.parse(data);
-
-          console.log("📊 PARSED DATA TYPE:", typeof json);
-          console.log("📊 IS ARRAY:", Array.isArray(json));
-
-          if (!Array.isArray(json)) {
-            console.log("⚠️ API did not return array");
-            res.writeHead(200, { "Content-Type": "application/json" });
-            return res.end(JSON.stringify([]));
-          }
-
-          console.log("📊 TOTAL COUNTRIES:", json.length);
-
-          // 4️⃣ Transform data
-          const result = json.map((c) => ({
-            name: c.name?.common,
-            population: c.population,
-            region: c.region,
-            code: c.cca3
-          }));
-
-          console.log("✅ TRANSFORMED SAMPLE:", result[0]);
-
-          // 5️⃣ Send response
-          res.writeHead(200, {
-            "Content-Type": "application/json"
-          });
-
-          console.log("🚀 RESPONSE SENT SUCCESSFULLY");
-          res.end(JSON.stringify(result));
-        } catch (err) {
-          console.log("❌ JSON PARSE ERROR:", err.message);
-
-          res.writeHead(200, {
-            "Content-Type": "application/json"
-          });
-
-          res.end(JSON.stringify([]));
-        }
-      });
-    })
-    .on("error", (err) => {
-      console.log("❌ HTTPS ERROR:", err.message);
-
-      res.writeHead(200, {
-        "Content-Type": "application/json"
-      });
-
-      res.end(JSON.stringify([]));
-    });
-},
-
-
-
-
   // ================= WEATHER =================
   weather: (req, res) => {
     https.get(
@@ -285,6 +67,73 @@ countries: (req, res, parsedUrl) => {
       res.end(JSON.stringify({ current_weather: null }));
     });
   },
+//===========================AIR-QUALITY-CHECKER============================
 
+aqi: (req, res, parsedUrl) => {
+  const parts = parsedUrl.pathname.split("/");
+  const city = parts[3] || "mumbai";
+
+  const TOKEN = "a8b272ab301f423b5c74c1e09d43df3ffbcd163e"; 
+
+  console.log("AQI API CALLED");
+  console.log("City:", city);
+
+  https.get(
+    `https://api.waqi.info/feed/${city}/?token=${TOKEN}`,
+    (apiRes) => {
+      let data = "";
+
+      console.log("⏳ Waiting for AQI response...");
+
+      apiRes.on("data", (chunk) => (data += chunk));
+
+      apiRes.on("end", () => {
+        try {
+          const json = JSON.parse(data);
+
+          console.log("AQI:", json?.data?.aqi);
+
+          const result = {
+            city: city,
+            aqi: json?.data?.aqi || null,
+          };
+
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+          });
+
+          res.end(JSON.stringify(result));
+        } catch (err) {
+          console.log("AQI PARSE ERROR:", err.message);
+
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+          });
+
+          res.end(
+            JSON.stringify({
+              city,
+              aqi: null,
+            })
+          );
+        }
+      });
+    }
+  ).on("error", (err) => {
+    console.log("AQI API ERROR:", err.message);
+
+    res.writeHead(200, {
+      "Content-Type": "application/json",
+    });
+
+    res.end(
+      JSON.stringify({
+        city,
+        aqi: null,
+      })
+    );
+  });
+},
+  
 
 };

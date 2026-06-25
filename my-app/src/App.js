@@ -6,11 +6,11 @@ import {
 
 import Login from "./Pages/Login.js";
 import Home from "./Pages/Home.js";
-import Countries from "./Pages/Countries.js";
 import Weather from "./Pages/Weather.js";
 import Profile from "./Pages/Profile.js";
 import Navbar from "./Components/Navbar.js";
 import ProtectedRoute from "./Components/ProtectedRoute.js";
+import AirQualityChecker from "./Pages/AirQualityChecker.js"
 
 function App() {
   return (
@@ -29,19 +29,19 @@ function App() {
           }
         />
         <Route
-          path="/Countries"
+          path="/Weather"
           element={
             <ProtectedRoute>
-              <Countries />
+              <Weather />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/Weather"
+          path="/AirQualityChecker"
           element={
             <ProtectedRoute>
-              <Weather />
+              <AirQualityChecker/>
             </ProtectedRoute>
           }
         />

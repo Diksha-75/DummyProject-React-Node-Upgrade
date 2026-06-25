@@ -26,16 +26,12 @@ const server = http.createServer((req, res) => {
     return routes.login(req, res);
   }
 
-  if (parsedUrl.pathname.startsWith("/api/countries")) {
-    return routes.countries(req, res, parsedUrl);
-  }
-
   if (parsedUrl.pathname === "/api/weather") {
     return routes.weather(req, res);
   }
 
-  if (parsedUrl.pathname === "/api/launches") {
-  return routes.launches(req, res);
+   if (parsedUrl.pathname.startsWith("/api/aqi/")) {
+  return routes.aqi(req, res, parsedUrl);
 }
 
   res.writeHead(404, { "Content-Type": "application/json" });
